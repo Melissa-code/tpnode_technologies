@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste de tous les utilisateurs</title>
+    <title>Commentaires sur une technologie</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -24,25 +24,28 @@
         }
     </style>
 </head>
-
 <body>
-    <h1>Liste des utilisateurs</h1>
+    <h1>Commentaires sur une technologie</h1>
 
-    <div id="utilisateurs-container"></div>
+    <div id="commentaires-container">
+        <!-- Feedbacks about a technology -->
+    </div>
 
     <script>
-        async function getUtilisateurs() {
+        async function getCommentaires() {
             try {
-                const response = await fetch('http://localhost:8000/utilisateurs');
+                const nomTechnologie = 'JavaScript';
+
+                const response = await fetch(`http://localhost:8000/commentaires/${nomTechnologie}`);
                 const data = await response.json();
 
-                const utilisateursContainer = document.getElementById('utilisateurs-container');
-                utilisateursContainer.innerHTML = '';
+                const commentairesContainer = document.getElementById('commentaires-container');
+                commentairesContainer.innerHTML = '';
 
                 if (data.length > 0) {
                     const table = document.createElement('table');
                     const headerRow = table.insertRow(0);
-                    const headers = ['ID', 'Nom', 'Prénom', 'Email'];
+                    const headers = ['ID', 'Date de création', 'Utilisateur ID', 'Technologie ID'];
 
                     headers.forEach(headerText => {
                         const th = document.createElement('th');
@@ -50,25 +53,25 @@
                         headerRow.appendChild(th);
                     });
 
-                    data.forEach(utilisateur => {
+                    data.forEach(commentaire => {
                         const row = table.insertRow(-1);
-                        Object.values(utilisateur).forEach(value => {
+                        Object.values(commentaire).forEach(value => {
                             const cell = row.insertCell(-1);
                             cell.appendChild(document.createTextNode(value));
                         });
                     });
 
-                    utilisateursContainer.appendChild(table);
+                    commentairesContainer.appendChild(table);
                 } else {
-                    utilisateursContainer.innerHTML = '<p>Aucun utilisateur trouvé.</p>';
+                    commentairesContainer.innerHTML = '<p>Aucun commentaire trouvé.</p>';
                 }
             } catch (error) {
-                console.error('Erreur lors de la récupération des utilisateurs:', error);
-                document.getElementById('utilisateurs-container').innerHTML = '<p>Une erreur est survenue lors de la récupération des utilisateurs.</p>';
+                console.error('Erreur lors de la récupération des commentaires:', error);
+                document.getElementById('commentaires-container').innerHTML = '<p>Une erreur est survenue lors de la récupération des commentaires.</p>';
             }
         }
 
-        document.addEventListener('DOMContentLoaded', getUtilisateurs);
+        document.addEventListener('DOMContentLoaded', getCommentaires);
     </script>
 </body>
 </html>

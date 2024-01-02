@@ -22,6 +22,13 @@ app.get('/liste_utilisateurs', function (req, res) {
     res.sendFile(__dirname + '/users.html');
 });
 
+/**
+ * Display the list of the feedbacks about a technology in a HTML template
+ */
+app.get('/liste_commentaires_technologie', function (req, res) {
+    res.sendFile(__dirname + '/feedbacks.html');
+});
+
 
 /* **************************** */
 /* Users API */
