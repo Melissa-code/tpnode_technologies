@@ -32,12 +32,12 @@ app.get('/utilisateurs', async function (req, res) {
 app.get('/utilisateurs/:id', async function (req, res) {
     try {
         // Get the param of the url
-        const userId = req.params.id;
+        const userId = parseInt(req.params.id);
         // Check if the id is an integer and a positive number
         if (isNaN(userId) || userId <= 0) {
             return res.status(400).json({ error: "L'identifiant d'utilisateur doit être un nombre entier positif." });
         }
-        const [result, field] = await db.query('SELECT nom, prenom FROM utilisateur WHERE id = ?', [userId]);
+        const [result, field] = await db.query('SELECT nom, prenom, email FROM utilisateur WHERE id = ?', [userId]);
         // Check if the user exists in the database 
         if (result.length === 0) {
             return res.status(404).json({ error: `Aucun utilisateur trouvé avec l'identifiant ${userId}.` });
@@ -75,7 +75,7 @@ app.post('/utilisateur', async function (req, res) {
  */
 app.put('/utilisateurs/:id', async function (req, res) {
     try {
-        const userId = req.params.id;
+        const userId = parseInt(req.params.id);
         if (isNaN(userId) || userId <= 0) {
             return res.status(400).json({ error: "L'identifiant d'utilisateur doit être un nombre entier positif." });
         }
@@ -99,6 +99,28 @@ app.put('/utilisateurs/:id', async function (req, res) {
     } 
 });
 
+/**
+ * Delete a user in the database (with Postman)
+ */
+app.delete('/utilisateurs/:id', async function (req, res) {
+    try {
+        const userId = parseInt(req.params.id);
+        if (isNaN(userId) || userId <= 0) {
+            return res.status(400).json({ error: "L'identifiant d'utilisateur doit être un nombre entier positif." });
+        }
+
+        const [result, field] = await db.query('DELETE FROM utilisateur WHERE id = ?', [userId]);
+        
+        // Check if the user exists in the database 
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: `Aucun utilisateur trouvé avec l'identifiant ${userId}.` });
+        }      
+        res.status(200).json({ message: `Utilisateur avec l'identifiant ${userId} a bien été supprimé.` });
+    } catch (err) {
+        console.error(`Erreur lors de la suppression de l\'utilisateur numero ${userId} :`, err);
+        res.status(500).json({ error: `Une erreur est survenue lors de la suppression de l\'utilisateur ${userId}.` });
+    } 
+});
 
 
 app.listen(8000, function() {
