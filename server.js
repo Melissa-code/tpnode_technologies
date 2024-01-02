@@ -49,7 +49,6 @@ app.get('/utilisateurs/:id', async function (req, res) {
     } 
 });
 
-
 /**
  * Add a new user in the database (with Postman)
  */
@@ -122,6 +121,29 @@ app.delete('/utilisateurs/:id', async function (req, res) {
     } 
 });
 
+/* **************************** */
+/* Feedback */
+/* **************************** */
+
+/**
+ * Add a new feedback in the database (with Postman)
+ */
+app.post('/commentaire', async function (req, res) {
+    try {
+        const { date, utilisateur_id, technologie_id } = req.body;
+        // Check the data in Postman 
+        if (!date || !utilisateur_id || !technologie_id) {
+            return res.status(400).json({ error: "Veuillez fournir la date, l'id de l'utilisateur et l'id de la technologie." });
+        }
+        // Insert the user in the DB 
+        const result = await db.query('INSERT INTO commentaire (date_creation_commentaire, utilisateur_id, technologie_id) VALUES (?, ?, ?)', [date, utilisateur_id, technologie_id]);
+        res.status(200).json({ message: "Commentaire créé avec succès.", insertedId: result.insertId });
+
+    } catch (error) {
+        console.error("Erreur lors de la création du commentaire :", error);
+        res.status(500).json({ error: "Une erreur est survenue lors de la création du commentaire." });
+    }
+}); 
 
 app.listen(8000, function() {
     console.log('serveur sur le port 8000');

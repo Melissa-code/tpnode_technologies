@@ -28,3 +28,9 @@ CREATE TABLE IF NOT EXISTS commentaire (
     CONSTRAINT FK_technologie_id FOREIGN KEY (technologie_id)
         REFERENCES technologie(id)
 );
+
+
+INSERT INTO technologie (nom_technologie) VALUES ('JavaScript');
+INSERT INTO technologie (nom_technologie) VALUES ('PHP');
+INSERT INTO technologie (nom_technologie) VALUES ('Nodejs');
+INSERT INTO technologie (nom_technologie) VALUES ('TypeScript');
