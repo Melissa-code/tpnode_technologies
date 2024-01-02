@@ -145,6 +145,41 @@ app.post('/commentaire', async function (req, res) {
     }
 }); 
 
+/**
+ * Get the first letter in upper case
+ * @param {*} str 
+ * @returns 
+ */
+function strUcFirst(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+/**
+ * Get all the feedback about a technology in the database
+ */
+app.get('/commentaires/:nomTechnologie', async function (req, res) {
+    try {
+        let nomTechnologie = req.params.nomTechnologie;
+        nomTechnologie = nomTechnologie.toLowerCase();
+        nomTechnologie = strUcFirst(nomTechnologie);
+
+        if (nomTechnologie === 'Javascript') {
+            nomTechnologie = 'JavaScript';
+        } else if (nomTechnologie === 'Typescript') {
+            nomTechnologie = 'TypeScript';
+        } else if(nomTechnologie === 'Php') {
+            nomTechnologie = 'PHP'; 
+        }
+     
+        const [result, field] = await db.query('SELECT c.id,c.date_creation_commentaire, c.utilisateur_id, c.technologie_id FROM commentaire AS c LEFT JOIN technologie AS t ON c.technologie_id = t.id WHERE nom_technologie = ?', [nomTechnologie]);
+        res.status(200).json(result);
+    } catch (err) {
+        console.error('Erreur lors de la récupération des commentaires sur une technologie :', err);
+        res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des commentaires sur une technologie.' });
+    } 
+});
+
+
 app.listen(8000, function() {
     console.log('serveur sur le port 8000');
 });
