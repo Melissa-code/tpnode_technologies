@@ -70,6 +70,36 @@ app.post('/utilisateur', async function (req, res) {
     }
 }); 
 
+/**
+ * Update a user in the database
+ */
+app.put('/utilisateurs/:id', async function (req, res) {
+    try {
+        const userId = req.params.id;
+        if (isNaN(userId) || userId <= 0) {
+            return res.status(400).json({ error: "L'identifiant d'utilisateur doit être un nombre entier positif." });
+        }
+
+        const { nom, prenom, email } = req.body;
+        // Check if there are a nom prenom email in Postman 
+        if (!nom || !prenom || !email) {
+            return res.status(400).json({ error: "Veuillez fournir le nom, le prénom et l'email de l'utilisateur." });
+        }
+        // Update the user
+        const [result, field] = await db.query('UPDATE utilisateur SET nom = ?, prenom = ?, email = ? WHERE id = ?', [nom, prenom, email, userId]);
+        
+        // Check if the user exists in the database 
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ error: `Aucun utilisateur trouvé avec l'identifiant ${userId}.` });
+        }      
+        res.status(200).json({ message: `Utilisateur avec l'identifiant ${userId} mis à jour avec succès.` });
+    } catch (err) {
+        console.error('Erreur lors de la modification de l\'utilisateur :', err);
+        res.status(500).json({ error: 'Une erreur est survenue lors de la modification de l\'utilisateur.' });
+    } 
+});
+
+
 
 app.listen(8000, function() {
     console.log('serveur sur le port 8000');
