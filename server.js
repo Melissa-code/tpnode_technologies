@@ -19,7 +19,6 @@ app.get('/', function (req, res) {
 app.get('/utilisateurs', async function (req, res) {
     try {
         const [result, field] = await db.query('SELECT * FROM utilisateur');
-        //console.log(result);
         res.status(200).json(result);
     } catch (err) {
         console.error('Erreur lors de la récupération des utilisateurs :', err);
@@ -28,11 +27,40 @@ app.get('/utilisateurs', async function (req, res) {
 });
 
 /**
- * Add a new user in the database 
+ * Get one user only in the database 
+ */
+app.get('/utilisateurs/:id', async function (req, res) {
+    try {
+        // Get the param of the url
+        const userId = req.params.id;
+        // Check if the id is an integer and a positive number
+        if (isNaN(userId) || userId <= 0) {
+            return res.status(400).json({ error: "L'identifiant d'utilisateur doit être un nombre entier positif." });
+        }
+        const [result, field] = await db.query('SELECT nom, prenom FROM utilisateur WHERE id = ?', [userId]);
+        // Check if the user exists in the database 
+        if (result.length === 0) {
+            return res.status(404).json({ error: `Aucun utilisateur trouvé avec l'identifiant ${userId}.` });
+        }
+        res.status(200).json(result[0]);
+    } catch (err) {
+        console.error(`Erreur lors de la récupération de l\'utilisateur numéro ${req.params.id}`, err);
+        res.status(500).json({ error: `Une erreur est survenue lors de la récupération de l\'utilisateur numéro ${req.params.id}`});
+    } 
+});
+
+
+/**
+ * Add a new user in the database (with Postman)
  */
 app.post('/utilisateur', async function (req, res) {
     try {
         const { nom, prenom, email } = req.body;
+        // Check if there are a nom prenom email in Postman 
+        if (!nom || !prenom || !email) {
+            return res.status(400).json({ error: "Veuillez fournir le nom, le prénom et l'email de l'utilisateur." });
+        }
+        // Insert the user in the DB 
         const result = await db.query('INSERT INTO utilisateur (nom, prenom, email) VALUES (?, ?, ?)', [nom, prenom, email]);
         res.status(200).json({ message: "Utilisateur créé avec succès.", insertedId: result.insertId });
 
