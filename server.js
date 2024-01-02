@@ -14,12 +14,10 @@ app.get('/', function (req, res) {
 });
 
 /**
- * Users page 
+ * Get all the users in the database
  */
 app.get('/utilisateurs', async function (req, res) {
     try {
-        console.log('Lancement de la connexion');
-        console.log('Lancement de la requête');
         const [result, field] = await db.query('SELECT * FROM utilisateur');
         //console.log(result);
         res.status(200).json(result);
@@ -29,7 +27,20 @@ app.get('/utilisateurs', async function (req, res) {
     } 
 });
 
+/**
+ * Add a new user in the database 
+ */
+app.post('/utilisateur', async function (req, res) {
+    try {
+        const { nom, prenom, email } = req.body;
+        const result = await db.query('INSERT INTO utilisateur (nom, prenom, email) VALUES (?, ?, ?)', [nom, prenom, email]);
+        res.status(200).json({ message: "Utilisateur créé avec succès.", insertedId: result.insertId });
 
+    } catch (error) {
+        console.error("Erreur lors de la création de l'utilisateur :", error);
+        res.status(500).json({ error: "Une erreur est survenue lors de la création de l'utilisateur." });
+    }
+}); 
 
 
 app.listen(8000, function() {
