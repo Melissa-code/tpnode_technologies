@@ -1,10 +1,12 @@
 const express = require('express'); 
 const app = express();
 const db = require('./database.js'); 
-//console.log(db);
+let cors = require('cors');
 
 // middleware
-app.use(express.json())
+app.use(express.json());
+// cors
+app.use(cors());
 
 /**
  * Home page 
@@ -12,6 +14,18 @@ app.use(express.json())
 app.get('/', function (req, res) {
     res.writeHead(200, {'Content-Type': 'text/html'}).end('<h1>Bienvenue sur la Page accueil</h1>');
 });
+
+/**
+ * Display the list of the users in a HTML template
+ */
+app.get('/liste_utilisateurs', function (req, res) {
+    res.sendFile(__dirname + '/users.html');
+});
+
+
+/* **************************** */
+/* Users API */
+/* **************************** */
 
 /**
  * Get all the users in the database
@@ -122,7 +136,7 @@ app.delete('/utilisateurs/:id', async function (req, res) {
 });
 
 /* **************************** */
-/* Feedback */
+/* Feedbacks API */
 /* **************************** */
 
 /**

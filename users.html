@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste de tous les utilisateurs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Liste des utilisateurs</h1>
+
+    <div id="utilisateurs-container">
+        <!-- Les utilisateurs seront affichés ici -->
+    </div>
+
+    <script>
+        // Fonction pour récupérer tous les utilisateurs depuis l'API et les afficher
+        async function getUtilisateurs() {
+            try {
+                const response = await fetch('http://localhost:8000/utilisateurs');
+                const data = await response.json();
+
+                const utilisateursContainer = document.getElementById('utilisateurs-container');
+                utilisateursContainer.innerHTML = '';
+
+                if (data.length > 0) {
+                    const table = document.createElement('table');
+                    const headerRow = table.insertRow(0);
+                    const headers = ['ID', 'Nom', 'Prénom', 'Email'];
+
+                    headers.forEach(headerText => {
+                        const th = document.createElement('th');
+                        th.appendChild(document.createTextNode(headerText));
+                        headerRow.appendChild(th);
+                    });
+
+                    data.forEach(utilisateur => {
+                        const row = table.insertRow(-1);
+                        Object.values(utilisateur).forEach(value => {
+                            const cell = row.insertCell(-1);
+                            cell.appendChild(document.createTextNode(value));
+                        });
+                    });
+
+                    utilisateursContainer.appendChild(table);
+                } else {
+                    utilisateursContainer.innerHTML = '<p>Aucun utilisateur trouvé.</p>';
+                }
+            } catch (error) {
+                console.error('Erreur lors de la récupération des utilisateurs:', error);
+                document.getElementById('utilisateurs-container').innerHTML = '<p>Une erreur est survenue lors de la récupération des utilisateurs.</p>';
+            }
+        }
+
+        // Appel de la fonction lors du chargement de la page
+        document.addEventListener('DOMContentLoaded', getUtilisateurs);
+    </script>
+</body>
+</html>
