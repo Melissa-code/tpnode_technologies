@@ -8,6 +8,11 @@ const utilisateurController = require('../controllers/utilisateurController');
 router.get('/', utilisateurController.getAllUsers); 
 
 /**
+ * Route to get all the users in the template HTML 
+ */
+router.get('/liste_utilisateurs', utilisateurController.getAllUsersInTemplateHtml); 
+
+/**
  * Route to get one user 
  */
 router.get('/:id', utilisateurController.getOneUser); 
@@ -26,6 +31,5 @@ router.put('/:id', utilisateurController.updateUser);
  * Route to delete a user
  */
 router.delete('/:id', utilisateurController.deleteUser); 
-
 
 module.exports = router; 

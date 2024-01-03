@@ -1,4 +1,5 @@
 const db = require('../database/database.js'); 
+const path = require('path');
 
 /**
  * Get all the users in the database
@@ -16,6 +17,22 @@ exports.getAllUsers = async function (req, res) {
         res.status(500).json({ error: 'Une erreur est survenue lors de la récupération des utilisateurs.' });
     } 
 }; 
+
+/**
+ * Display the list of the users in a HTML template
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.getAllUsersInTemplateHtml = async function (req, res) {
+    try {
+        const filePath = path.join(__dirname, '../users.html');
+        res.sendFile(filePath);
+    } catch (err) {
+        console.error('Erreur :', err);
+        res.status(500).send(`Erreur : ${err.message}`);
+    }
+}
 
 /**
  * Get one user in the database 
