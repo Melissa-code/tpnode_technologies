@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connexion</title>
+</head>
+<body>
+    <h1>Connexion</h1>
+
+    <!-- form -->
+    <form id="loginForm">
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+
+        <button type="button" onclick="login()">Login</button>
+    </form>
+    <!-- error msg -->
+    <div id="error-message" style="color: red;"></div>
+    <div id="success-message" style="color: green;"></div>
+
+    <script>
+        async function login() {
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+          
+            try {
+                const response = await fetch('http://localhost:8000/utilisateurs/connexion', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ email: email, mdp: password })
+                });
+
+                if (!response.ok) {
+                    throw new Error('Connection refusée.');
+                }
+                document.getElementById('success-message').innerText = 'Connexion réussie.';
+                const data = await response.json();
+                // Successful login
+                console.log('Token:', data.token);
+            } catch (error) {
+                document.getElementById('error-message').innerText = 'Connection refusée. Vérifier vos identifiants.';
+            }
+        }
+    </script>
+</body>
+</html>

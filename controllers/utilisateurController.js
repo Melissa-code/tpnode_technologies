@@ -181,22 +181,43 @@ exports.register = async function (req, res) {
  * @returns 
  */
 exports.login = async function (req, res) {
-    // Check if the email already exists 
-    const { email, mdp } = req.body; 
-    const [result, field] = await db.query('SELECT * FROM utilisateur WHERE email = ?', [email]); 
-    if (result.length == 0) {
-        return res.status(401).json({error: "Connexion impossible. Utilisateur non existant."}); 
+    try {
+        // Check if the email already exists 
+        const { email, mdp } = req.body; 
+        const [result, field] = await db.query('SELECT * FROM utilisateur WHERE email = ?', [email]); 
+        if (result.length === 0) {
+            return res.status(401).json({error: "Connexion impossible. Utilisateur non existant."}); 
+        }
+        // Get the hash mdp 
+        const user = result[0]; 
+        console.log(user); 
+        // compare mdp avec mdp bcrypt (first parm = no hash)
+        const sameMdp = await bcrypt.compare(mdp, user.mdp)
+        // if mdp = hash mdp return jwt token fir sign
+        if (!sameMdp) {
+            return res.status(401).json({error: "Mot de passe incorrect. "})
+        } 
+        console.log('connexion reussie.')
+        const token = jwt.sign({email}, process.env.SECRET_KEY, {expiresIn: '1h'})
+        res.json({token})
+    } catch(err) {
+        console.error('Erreur durant la connexion :', err); 
+        res.status(500).json({ error: 'Erreur serveur.' });
     }
-    // Get the hash mdp 
-    const user = result[0]; 
-    console.log(user); 
-    // compare mdp avec mdp bcrypt (first parm = no hash)
-    const sameMdp = await bcrypt.compare(mdp, user.mdp)
-    // if mdp = hash mdp return jwt token fir sign
-    if (!sameMdp) {
-        return res.status(401).json({error: "Mot de passe incorrect. "})
-    } 
-    const token = jwt.sign({email}, process.env.SECRET_KEY, {expiresIn: '1h'})
-    res.json({token})
 }
 
+/**
+ * Display the login form in a HTML template
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ */
+exports.loginInTemplateHtml = async function (req, res) {
+    try {
+        const filePath = path.join(__dirname, '../login.html');
+        res.sendFile(filePath);
+    } catch (err) {
+        console.error('Erreur :', err);
+        res.status(500).send(`Erreur : ${err.message}`);
+    }
+}

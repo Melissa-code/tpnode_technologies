@@ -10,7 +10,12 @@ router.post('/inscription', utilisateurController.register)
 /**
  * Route to login a user (be careful: must be before '/:id')
  */
-router.get('/connexion', utilisateurController.login)
+router.post('/connexion', utilisateurController.login)
+
+/**
+ * Route to login a user in the template HTML 
+ */
+router.get('/se_connecter', utilisateurController.loginInTemplateHtml); 
 
 /**
  * Route to get all the users 
