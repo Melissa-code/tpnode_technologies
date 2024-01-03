@@ -7,6 +7,7 @@ const homeRoute = require('./routes/homeRoute.js');
 const utilisateurRoute = require('./routes/utilisateurRoute.js'); 
 const commentaireRoute = require('./routes/commentaireRoute.js');
 const messageRoute = require('./routes/messageRoute.js');
+const technologieRoute = require('./routes/technologieRoute.js');
 
 app.use(bodyParser.json());
 app.use(cors());
@@ -19,6 +20,8 @@ app.use('/utilisateurs', utilisateurRoute);
 app.use('/commentaires', commentaireRoute); 
 
 app.use('/messages', messageRoute); 
+
+app.use('/technologies', technologieRoute); 
 
 // Server 
 app.listen(8000, function() {
