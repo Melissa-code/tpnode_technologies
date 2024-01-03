@@ -75,13 +75,13 @@ app.get('/utilisateurs/:id', async function (req, res) {
  */
 app.post('/utilisateur', async function (req, res) {
     try {
-        const { nom, prenom, email } = req.body;
+        const { nom, prenom, email, mdp } = req.body;
         // Check if there are a nom prenom email in Postman 
-        if (!nom || !prenom || !email) {
-            return res.status(400).json({ error: "Veuillez fournir le nom, le prénom et l'email de l'utilisateur." });
+        if (!nom || !prenom || !email || !mdp) {
+            return res.status(400).json({ error: "Veuillez fournir le nom, le prénom, l'email et le mot de passe de l'utilisateur." });
         }
         // Insert the user in the DB 
-        const result = await db.query('INSERT INTO utilisateur (nom, prenom, email) VALUES (?, ?, ?)', [nom, prenom, email]);
+        const result = await db.query('INSERT INTO utilisateur (nom, prenom, email, mdp) VALUES (?, ?, ?, ?)', [nom, prenom, email, mdp]);
         res.status(200).json({ message: "Utilisateur créé avec succès.", insertedId: result.insertId });
 
     } catch (error) {
@@ -100,13 +100,13 @@ app.put('/utilisateurs/:id', async function (req, res) {
             return res.status(400).json({ error: "L'identifiant d'utilisateur doit être un nombre entier positif." });
         }
 
-        const { nom, prenom, email } = req.body;
+        const { nom, prenom, email, mdp } = req.body;
         // Check if there are a nom prenom email in Postman 
-        if (!nom || !prenom || !email) {
-            return res.status(400).json({ error: "Veuillez fournir le nom, le prénom et l'email de l'utilisateur." });
+        if (!nom || !prenom || !email || !mdp) {
+            return res.status(400).json({ error: "Veuillez fournir le nom, le prénom, l'email et le mot de passe de l'utilisateur." });
         }
         // Update the user
-        const [result, field] = await db.query('UPDATE utilisateur SET nom = ?, prenom = ?, email = ? WHERE id = ?', [nom, prenom, email, userId]);
+        const [result, field] = await db.query('UPDATE utilisateur SET nom = ?, prenom = ?, email = ?, mdp = ? WHERE id = ?', [nom, prenom, email, mdp, userId]);
         
         // Check if the user exists in the database 
         if (result.affectedRows === 0) {

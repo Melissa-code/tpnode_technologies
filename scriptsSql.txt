@@ -34,3 +34,17 @@ INSERT INTO technologie (nom_technologie) VALUES ('JavaScript');
 INSERT INTO technologie (nom_technologie) VALUES ('PHP');
 INSERT INTO technologie (nom_technologie) VALUES ('Nodejs');
 INSERT INTO technologie (nom_technologie) VALUES ('TypeScript');
+
+
+ALTER TABLE utilisateur
+ADD COLUMN mdp VARCHAR(255) NOT NULL; 
+
+-----------------------------------------------------
+-----------------------------------------------------
+
+Export the database: 
+Server -> Data export -> select the database -> create a folder in the project (exportDb) 
+-> check Create schema -> start export 
+
+Import the database: 
+Server -> Data import 
