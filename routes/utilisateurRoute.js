@@ -3,6 +3,16 @@ const router = express.Router();
 const utilisateurController = require('../controllers/utilisateurController'); 
 
 /**
+ * Route to register a user 
+ */
+router.post('/inscription', utilisateurController.register)
+
+/**
+ * Route to login a user (be careful: must be before '/:id')
+ */
+router.get('/connexion', utilisateurController.login)
+
+/**
  * Route to get all the users 
  */
 router.get('/', utilisateurController.getAllUsers); 
@@ -31,15 +41,5 @@ router.put('/:id', utilisateurController.updateUser);
  * Route to delete a user
  */
 router.delete('/:id', utilisateurController.deleteUser); 
-
-/**
- * Route to register a user 
- */
-router.post('/inscription', utilisateurController.register)
-
-/**
- * Route to login a user 
- */
-//router.get('/connexion', userController.login)
 
 module.exports = router; 

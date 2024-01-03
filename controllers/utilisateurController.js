@@ -157,7 +157,7 @@ exports.register = async function (req, res) {
         const [result, field] = await db.query('SELECT email, mdp FROM utilisateur WHERE email = ?', [email]);
 
         if (result.length > 0) {
-            return res.status(400).json({error: "Iscription impossible. Cet utilisateur existe déjà."});
+            return res.status(400).json({error: "Inscription impossible. Cet utilisateur existe déjà."});
         }
         // If new email, hash mdp with bcrypt 
         const hashMdp = await bcrypt.hash(mdp, 10); // 10 turns
@@ -171,5 +171,32 @@ exports.register = async function (req, res) {
         console.error(`Erreur lors de la création du compte utilisateur.`);
         res.status(500).json({ error: `Une erreur est survenue lors de la création du compte utilisateur.` });
     }    
+}
+
+/**
+ * Log-in a user 
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+exports.login = async function (req, res) {
+    // Check if the email already exists 
+    const { email, mdp } = req.body; 
+    const [result, field] = await db.query('SELECT * FROM utilisateur WHERE email = ?', [email]); 
+    if (result.length == 0) {
+        return res.status(401).json({error: "Connexion impossible. Utilisateur non existant."}); 
+    }
+    // Get the hash mdp 
+    const user = result[0]; 
+    console.log(user); 
+    // compare mdp avec mdp bcrypt (first parm = no hash)
+    const sameMdp = await bcrypt.compare(mdp, user.mdp)
+    // if mdp = hash mdp return jwt token fir sign
+    if (!sameMdp) {
+        return res.status(401).json({error: "Mot de passe incorrect. "})
+    } 
+    const token = jwt.sign({email}, process.env.SECRET_KEY, {expiresIn: '1h'})
+    res.json({token})
 }
 
