@@ -32,4 +32,14 @@ router.put('/:id', utilisateurController.updateUser);
  */
 router.delete('/:id', utilisateurController.deleteUser); 
 
+/**
+ * Route to register a user 
+ */
+router.post('/inscription', utilisateurController.register)
+
+/**
+ * Route to login a user 
+ */
+//router.get('/connexion', userController.login)
+
 module.exports = router; 

@@ -1,5 +1,8 @@
 const db = require('../database/database.js'); 
 const path = require('path');
+const bcrypt = require('bcrypt')
+const jwt = require('jsonwebtoken')
+require('dotenv').config(); 
 
 /**
  * Get all the users in the database
@@ -139,3 +142,34 @@ exports.deleteUser = async function (req, res) {
         res.status(500).json({ error: `Une erreur est survenue lors de la suppression de l\'utilisateur ${userId}.` });
     } 
 }
+
+/**
+ * Register a user 
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @returns 
+ */
+exports.register = async function (req, res) {
+    try {
+        // Check the email because it is unique 
+        const { nom, prenom, email, mdp } = req.body;
+        const [result, field] = await db.query('SELECT email, mdp FROM utilisateur WHERE email = ?', [email]);
+
+        if (result.length > 0) {
+            return res.status(400).json({error: "Iscription impossible. Cet utilisateur existe déjà."});
+        }
+        // If new email, hash mdp with bcrypt 
+        const hashMdp = await bcrypt.hash(mdp, 10); // 10 turns
+        // save the new user
+        await db.query('INSERT INTO utilisateur (nom, prenom, email, mdp, role) VALUES (?, ?, ?, ?, ?)', [nom, prenom, email, hashMdp, null]);
+
+        // send jwt token for signature 
+        const token = jwt.sign({email}, process.env.SECRET_KEY, {expiresIn: '1h'});
+        res.json({token}); 
+    } catch(err) {
+        console.error(`Erreur lors de la création du compte utilisateur.`);
+        res.status(500).json({ error: `Une erreur est survenue lors de la création du compte utilisateur.` });
+    }    
+}
+

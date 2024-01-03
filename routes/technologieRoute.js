@@ -17,8 +17,6 @@ router.get('/:id', technologieController.getOneTechnology);
  */
 router.post('/', technologieController.addTechnology); 
 
-module.exports = router; 
-
 /**
  * Route to update a technology 
  */
