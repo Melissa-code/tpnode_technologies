@@ -10,5 +10,3 @@ const pool = mysql.createPool({
 
 pool.getConnection(); 
 module.exports = pool; 
-
-

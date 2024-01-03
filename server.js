@@ -1,6 +1,6 @@
 const express = require('express'); 
 const app = express();
-const db = require('./database.js'); 
+const db = require('./database/database.js'); 
 let cors = require('cors');
 
 // middleware
