@@ -245,6 +245,30 @@ app.get('/commentaires/:nomTechnologie/:dateCreation', async function (req, res)
     } 
 });
 
+/* **************************** */
+/* Login & sign-up */
+/* **************************** */
+
+/**
+ * Login 
+ */
+app.get('/connexion', async function (req, res) {
+    try {
+        const { email, mdp } = req.body;
+        // Check the data in Postman 
+        if (!email || !mdp) {
+            return res.status(400).json({ error: "Veuillez fournir l\'email et le mot de passe." });
+        }
+        // Check the email & mdp in th DB 
+        const result = await db.query('SELECT email, mdp FROM utilisateur VALUES (?, ?)', [email, mdp]);
+        res.status(200).json({ message: "Utilisateur connecté.", insertedId: result.insertId });
+
+    } catch (error) {
+        console.error("Erreur lors de la connexion", error);
+        res.status(500).json({ error: "Une erreur est survenue lors de la connexion." });
+    }
+}); 
+
 app.listen(8000, function() {
     console.log('serveur sur le port 8000');
 });

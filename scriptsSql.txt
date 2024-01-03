@@ -1,6 +1,8 @@
 DATABASE : MySQL SERVER 
 -----------------------------------------------------
 -----------------------------------------------------
+SCRIPTS SQL TP 1 :
+
 
 CREATE DATABASE tpnode_technologies;
 
@@ -48,3 +50,23 @@ Server -> Data export -> select the database -> create a folder in the project (
 
 Import the database: 
 Server -> Data import 
+
+
+-----------------------------------------------------
+-----------------------------------------------------
+
+SCRIPTS SQL TP 2 :
+
+
+ALTER TABLE utilisateur
+ADD COLUMN role VARCHAR(100) DEFAULT NULL; 
+
+ALTER TABLE commentaire
+ADD COLUMN message TEXT NULL; 
+
+ALTER TABLE technologie
+ADD COLUMN date_creation_technologie DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP; 
+
+ALTER TABLE technologie
+ADD COLUMN nom_createur_technologie VARCHAR(50) NOT NULL; 
+
