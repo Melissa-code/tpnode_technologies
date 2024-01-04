@@ -102,3 +102,10 @@ exports.isAdminOrIsJournalist = async (req, res, next) => {
         res.status(500).json({error: 'Erreur serveur.'})
     }
 }
+
+/**
+ * TO DO : Stockez le token jwt que vous recevez en vous connectant 
+ * côté front dans le localStorage ou les cookies puis renvoyé 
+ * le côté backend pour afficher la liste des commentaire 
+ * (rappel, seul les personnes connectées peuvent voir les commentaires).
+ */
