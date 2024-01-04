@@ -71,3 +71,34 @@ exports.isAdmin = async (req, res, next) => {
         res.status(500).json({error: 'Erreur serveur.'})
     }
 }
+
+/**
+ * Check in the database if the user (get by his unique email) is an administrateur or a journaliste
+ * 
+ * @param {*} req 
+ * @param {*} res 
+ * @param {*} next 
+ * @returns 
+ */
+exports.isAdminOrIsJournalist = async (req, res, next) => {
+    const token = req.query.token || req.headers.authorization; 
+    if (!token) {
+        return res.status(401).json({error: "Accès refusé. Aucun token"});
+    }
+    const email = getEmailFromToken(token); 
+    if (!email) {
+        return res.status(401).json({error: "Token invalide." });
+    }
+    try {
+        const [result, field] = await db.query('SELECT role FROM utilisateur WHERE email = ?' , [email]); 
+        console.log(result[0].role);
+        if (result.length === 1 && (result[0].role === "administrateur" || result[0].role === "journaliste")) {
+            next(); 
+        } else {
+            res.status(403).json({error: 'Accès refusé. Seul un utilisateur de rôle administrateur ou journaliste a un droit d\'acccès.'});
+        }
+    } catch(error) {
+        console.error(error); 
+        res.status(500).json({error: 'Erreur serveur.'})
+    }
+}

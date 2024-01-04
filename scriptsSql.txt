@@ -70,3 +70,12 @@ ADD COLUMN date_creation_technologie DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
 ALTER TABLE technologie
 ADD COLUMN nom_createur_technologie VARCHAR(50) NOT NULL; 
 
+
+ALTER TABLE commentaire
+drop CONSTRAINT FK_technologie_id;
+
+ALTER TABLE commentaire
+ADD CONSTRAINT FK_technologie_id
+    FOREIGN KEY (technologie_id)
+    REFERENCES technologie(id)
+    ON DELETE CASCADE ON UPDATE NO ACTION;

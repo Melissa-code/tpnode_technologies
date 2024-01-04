@@ -14,17 +14,17 @@ router.get('/', technologieController.getAllTechnologies);
 router.get('/:id', technologieController.getOneTechnology); 
 
 /**
- * Route to add a new technology 
+ * Route to add a new technology (user must be an admin)
  */
 router.post('/', middlewareIsAdmin.isAdmin, technologieController.addTechnology); 
 
 /**
- * Route to update a technology 
+ * Route to update a technology (user must be an admin)
  */
 router.put('/:id', middlewareIsAdmin.isAdmin, technologieController.updateTechnology); 
 
 /**
- * Route to delete a technology 
+ * Route to delete a technology (user must be an admin)
  */
 router.delete('/:id', middlewareIsAdmin.isAdmin, technologieController.deleteTechnology); 
 

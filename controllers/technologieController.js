@@ -94,7 +94,7 @@ exports.updateTechnology = async function (req, res) {
 
 /**
  * Delete a technology in the database 
- * TO DO : add on update cascade on delete cascade to the table commentaire (FK : technologie_id)
+ * TO DO : add on update cascade on delete cascade to the table commentaire (FK : technologie_id) cf scriptsSql.txt
  * 
  * @param {*} req 
  * @param {*} res 
