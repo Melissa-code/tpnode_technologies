@@ -1,6 +1,7 @@
 const express = require('express'); 
 const router = express.Router(); 
 const technologieController = require('../controllers/technologieController'); 
+const middlewareIsAdmin = require('../middleware/middleware'); 
 
 /**
  * Route to get all the technologies 
@@ -15,16 +16,16 @@ router.get('/:id', technologieController.getOneTechnology);
 /**
  * Route to add a new technology 
  */
-router.post('/', technologieController.addTechnology); 
+router.post('/', middlewareIsAdmin.isAdmin, technologieController.addTechnology); 
 
 /**
  * Route to update a technology 
  */
-router.put('/:id', technologieController.updateTechnology); 
+router.put('/:id', middlewareIsAdmin.isAdmin, technologieController.updateTechnology); 
 
 /**
  * Route to delete a technology 
  */
-router.delete('/:id', technologieController.deleteTechnology); 
+router.delete('/:id', middlewareIsAdmin.isAdmin, technologieController.deleteTechnology); 
 
 module.exports = router; 

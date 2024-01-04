@@ -94,6 +94,7 @@ exports.updateTechnology = async function (req, res) {
 
 /**
  * Delete a technology in the database 
+ * TO DO : add on update cascade on delete cascade to the table commentaire (FK : technologie_id)
  * 
  * @param {*} req 
  * @param {*} res 
@@ -102,6 +103,7 @@ exports.updateTechnology = async function (req, res) {
 exports.deleteTechnology = async function (req, res) {
     try {
         const technologyId = parseInt(req.params.id);
+        console.log(technologyId)
         if (isNaN(technologyId ) || technologyId  <= 0) {
             return res.status(400).json({ error: "L'identifiant de la technologie doit être un nombre entier positif." });
         }
@@ -110,8 +112,8 @@ exports.deleteTechnology = async function (req, res) {
             return res.status(404).json({ error: `Aucune technologie trouvée avec l'identifiant ${technologyId}.` });
         }      
         res.status(200).json({ message: `La technologieavec avec l'identifiant ${technologyId} a bien été supprimée.` });
-    } catch (err) {
-        console.error(`Erreur lors de la suppression de la technologie numero ${technologyId} :`, err);
+    } catch (error) {
+        console.error(`Erreur lors de la suppression de la technologie:`, error);
         res.status(500).json({ error: `Une erreur est survenue lors de la suppression de la technologie ${technologyId}.` });
     } 
 }
